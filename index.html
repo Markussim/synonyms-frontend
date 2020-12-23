@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test</title>
+    <script>
+      async function run() {
+        let milliseconds = Date.now();
+        let words = document.getElementById("text").value;
+        document.getElementById("textBox").innerText = "Loading";
+        let response = await fetch("https://synonyms-z3twrdgj3q-lz.a.run.app/test", {
+          method: "POST",
+
+          // whatever data you want to post with a key-value pair
+
+          body: "word=" + escape(words),
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        });
+
+        let data = await response.text();
+
+        document.getElementById("textBox").innerText = data;
+
+        document.getElementById("Again").hidden = false;
+
+        console.log(Date.now() - milliseconds);
+      }
+
+      function again() {
+        document.getElementById("Again").hidden = true;
+        document.getElementById("text").value = document.getElementById(
+          "textBox"
+        ).innerText;
+        run();
+      }
+    </script>
+  </head>
+  <body id="test">
+    <form
+      onsubmit="run(); return false"
+      action="/synonyms"
+      method="post"
+      enctype="application/json"
+    >
+      <textarea id="text" type="text" name="text"></textarea>
+      <br />
+      <button type="submit">Submit</button>
+    </form>
+    <p id="textBox"></p>
+    <button onclick="again()" id="Again" hidden>Submit again</button>
+  </body>
+</html>
